@@ -1,0 +1,11 @@
+skips: []
+
+tests:
+
+- B301 # pickle.load non sécurisé
+
+- B506 # yaml.load sans SafeLoader
+
+- B105 # mot de passe hardcodé
+
+- B608 # SQL injection
