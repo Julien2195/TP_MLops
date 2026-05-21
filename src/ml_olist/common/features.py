@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def add_olist_features(df: pd.DataFrame) -> pd.DataFrame:
     """Feature engineering métier Olist.
 

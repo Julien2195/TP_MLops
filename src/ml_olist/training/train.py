@@ -1,5 +1,4 @@
 import os
-import warnings
 from pathlib import Path
 
 import joblib
@@ -66,7 +65,9 @@ def train(n_estimators: int = 150, max_depth: int = 15, random_state: int = 42) 
 
         # Gate de qualité / Seuil de performance
         if metrics["r2"] < MIN_R2:
-            raise ValueError(f"R² insuffisant : {metrics['r2']:.4f} < seuil {MIN_R2}. Run marqué FAILED.")
+            raise ValueError(
+                f"R² insuffisant : {metrics['r2']:.4f} < seuil {MIN_R2}. Run marqué FAILED."
+            )
 
         # Sauvegarde locale (Garantit que ton modèle est bien présent pour la suite du TP !)
         ARTIFACTS_DIR.mkdir(exist_ok=True)
@@ -77,9 +78,15 @@ def train(n_estimators: int = 150, max_depth: int = 15, random_state: int = 42) 
         try:
             mlflow.log_artifact(local_path=str(MODEL_PATH), artifact_path="model")
             print("🚀 Modèle téléversé avec succès sur le serveur MLflow.")
-        except Exception as e:
-            print(f"⚠️ Alerte stockage : Le modèle n'a pas pu être poussé sur le serveur MLflow (Manque d'identifiants S3/MinIO).")
-            print(f"   Pas de panique, le run MLflow contient bien tes paramètres et métriques, et le fichier est dispo localement !")
+        except Exception:
+            print(
+                "⚠️ Alerte stockage : Le modèle n'a pas pu être poussé sur le serveur MLflow "
+                "(Manque d'identifiants S3/MinIO)."
+            )
+            print(
+                "   Pas de panique, le run MLflow contient bien tes paramètres et métriques, "
+                "et le fichier est dispo localement !"
+            )
 
         return metrics
 

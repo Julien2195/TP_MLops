@@ -1,10 +1,11 @@
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, FunctionTransformer
+from sklearn.preprocessing import FunctionTransformer, StandardScaler
 
 # Import de ta fonction d'origine corrigée
 from src.ml_olist.common.features import add_olist_features
+
 
 def build_preprocessing_pipeline() -> Pipeline:
     """Crée le pipeline global combinant le feature engineering Olist et le scaling."""

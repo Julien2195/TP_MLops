@@ -1,5 +1,6 @@
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 FEATURE_COLS = [
     "product_weight_g",
@@ -19,12 +20,13 @@ def load_olist_data():
         data_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Génération d'un dataset fictif compatible avec le feature engineering métier
-        df_mock = pd.DataFrame({col: [100.0] * 10 for col in FEATURE_COLS})
-        df_mock[TARGET_COL] = [10.5] * 10
+        n = 1100
+        df_mock = pd.DataFrame({col: [100.0] * n for col in FEATURE_COLS})
+        df_mock[TARGET_COL] = [10.5] * n
 
         # Ajout des colonnes requises par add_olist_features
-        df_mock["order_item_id"] = [1] * 10
-        df_mock["order_purchase_timestamp"] = pd.date_range(start="2026-01-01", periods=10, freq="D")
+        df_mock["order_item_id"] = [1] * n
+        df_mock["order_purchase_timestamp"] = pd.date_range(start="2024-01-01", periods=n, freq="D")
 
         df_mock.to_csv(data_path, index=False)
 
