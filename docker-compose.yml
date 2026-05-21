@@ -1,0 +1,69 @@
+version: "3.9"
+services:
+
+  # ── Backend FastAPI ─────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - minio
+    env_file:
+      - .env
+    environment:
+      MINIO_ENDPOINT: http://minio:9000
+      LOCAL_MODEL_PATH: /app/tmp/model_latest.joblib
+    volumes:
+      - ./artifacts:/app/artifacts:ro
+ 
+  # ── Frontend Streamlit ─────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    environment:
+      - BACKEND_URL=http://backend:8000
+ 
+  # ── MinIO — Stockage objet S3 local ─────────────────────────────
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123
+    ports:
+      - "9000:9000"   # API S3
+      - "9001:9001"   # Console web MinIO
+    volumes:
+      - minio_data:/data
+ 
+  # ── MLflow — Tracking des expériences ML ────────────────────────
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.13.0
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:///mlflow.db
+      --default-artifact-root s3://ml-models/mlflow-artifacts
+      --host 0.0.0.0
+      --port 5000
+    ports:
+      - "5000:5000"
+    environment:
+      MLFLOW_S3_ENDPOINT_URL: http://minio:9000
+      AWS_ACCESS_KEY_ID: admin
+      AWS_SECRET_ACCESS_KEY: password123
+    depends_on:
+      - minio
+    volumes:
+      - mlflow_data:/mlflow
+ 
+volumes:
+  minio_data:
+  mlflow_data:
+
