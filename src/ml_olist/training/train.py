@@ -33,24 +33,31 @@ def train(n_estimators: int = 150, max_depth: int = 15, random_state: int = 42) 
         print(f"Target : {y_train.mean():.1f} jours en moyenne")
 
         # Logging des paramètres
-        mlflow.log_params({
-            "n_estimators": n_estimators,
-            "max_depth": max_depth,
-            "random_state": random_state,
-            "train_rows": len(X_train),
-            "mean_delivery": round(float(y_train.mean()), 2),
-        })
+        mlflow.log_params(
+            {
+                "n_estimators": n_estimators,
+                "max_depth": max_depth,
+                "random_state": random_state,
+                "train_rows": len(X_train),
+                "mean_delivery": round(float(y_train.mean()), 2),
+            }
+        )
 
         # Pipeline d'entraînement
-        model = Pipeline([
-            ("preprocessing", build_preprocessing_pipeline()),
-            ("regressor", RandomForestRegressor(
-                n_estimators=n_estimators,
-                max_depth=max_depth,
-                random_state=random_state,
-                n_jobs=-1,
-            )),
-        ])
+        model = Pipeline(
+            [
+                ("preprocessing", build_preprocessing_pipeline()),
+                (
+                    "regressor",
+                    RandomForestRegressor(
+                        n_estimators=n_estimators,
+                        max_depth=max_depth,
+                        random_state=random_state,
+                        n_jobs=-1,
+                    ),
+                ),
+            ]
+        )
         model.fit(X_train, y_train)
 
         # Évaluation

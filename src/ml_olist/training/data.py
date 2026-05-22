@@ -2,14 +2,9 @@ from pathlib import Path
 
 import pandas as pd
 
-FEATURE_COLS = [
-    "product_weight_g",
-    "product_volume_cm3",
-    "price",
-    "freight_value",
-    "distance_km"
-]
+FEATURE_COLS = ["product_weight_g", "product_volume_cm3", "price", "freight_value", "distance_km"]
 TARGET_COL = "delivery_time_days"
+
 
 def load_olist_data():
     """Charge le jeu de données Olist depuis les fichiers CSV locaux."""
@@ -33,6 +28,7 @@ def load_olist_data():
     df = pd.read_csv(data_path)
     return df
 
+
 def validate_schema(df):
     """Valide les colonnes de base nécessaires."""
     # On vérifie les features de base et les colonnes intermédiaires du feature engineering
@@ -40,6 +36,7 @@ def validate_schema(df):
     missing = set(required_cols) - set(df.columns)
     if missing:
         raise ValueError(f"Colonnes manquantes dans le dataset : {missing}")
+
 
 def split_data(df):
     """Sépare les données en train et test sets."""
@@ -50,4 +47,5 @@ def split_data(df):
     y = df[TARGET_COL]
 
     from sklearn.model_selection import train_test_split
+
     return train_test_split(X, y, test_size=0.2, random_state=42)

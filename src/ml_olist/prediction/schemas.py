@@ -6,14 +6,13 @@ from pydantic import BaseModel, Field
 class OrderFeatures(BaseModel):
     """Features d'une commande Olist pour prédire le temps de livraison."""
 
+    product_weight_g: float = Field(..., gt=0, description="Poids du produit (grammes)")
+    product_volume_cm3: float = Field(..., gt=0, description="Volume du produit (cm³)")
     price: float = Field(..., gt=0, description="Prix total articles (BRL)")
     freight_value: float = Field(..., ge=0, description="Coût de livraison (BRL)")
-    payment_installments: int = Field(..., ge=1, description="Nombre de versements")
-    payment_value: float = Field(..., gt=0, description="Montant total payé (BRL)")
+    distance_km: float = Field(..., ge=0, description="Distance seller → customer (km)")
     order_item_id: int = Field(..., ge=1, description="Nombre d'articles")
     order_purchase_timestamp: datetime = Field(..., description="Date et heure d'achat")
-    seller_state: str = Field(..., description="État du vendeur (ex: SP)")
-    customer_state: str = Field(..., description="État du client (ex: RJ)")
 
 
 class DeliveryPrediction(BaseModel):
