@@ -15,8 +15,7 @@ def splits():
 def test_derived_features_present(splits):
     X_tr, _, _, _ = splits
     out = add_olist_features(X_tr)
-    for col in ["freight_ratio", "log_price", "is_multi_item",
-                "purchase_dow", "purchase_month"]:
+    for col in ["freight_ratio", "log_price", "is_multi_item", "purchase_dow", "purchase_month"]:
         assert col in out.columns, f"Feature manquante : {col}"
 
 

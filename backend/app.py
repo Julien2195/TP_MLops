@@ -10,9 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from ml_olist.prediction.schemas import DeliveryPrediction, OrderFeatures  # noqa: E402
-
 from backend.storage.s3_client import download_model  # noqa: E402
+from ml_olist.prediction.schemas import DeliveryPrediction, OrderFeatures  # noqa: E402
 
 MODEL_LOCAL = os.getenv("LOCAL_MODEL_PATH", "/app/tmp/model_latest.joblib")
 

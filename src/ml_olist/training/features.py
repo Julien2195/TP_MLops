@@ -24,26 +24,19 @@ def build_preprocessing_pipeline() -> Pipeline:
         "log_price",
         "is_multi_item",
         "purchase_dow",
-        "purchase_month"
+        "purchase_month",
     ]
 
     # 2. Imputation et Standardisation des variables numériques
-    numeric_transformer = Pipeline(steps=[
-        ("imputer", SimpleImputer(strategy="median")),
-        ("scaler", StandardScaler())
-    ])
+    numeric_transformer = Pipeline(
+        steps=[("imputer", SimpleImputer(strategy="median")), ("scaler", StandardScaler())]
+    )
 
     processor = ColumnTransformer(
-        transformers=[
-            ("num", numeric_transformer, all_features)
-        ],
-        remainder="drop"
+        transformers=[("num", numeric_transformer, all_features)], remainder="drop"
     )
 
     # Pipeline final : d'abord on crée les features, ensuite on applique l'imputer/scaler
-    pipeline = Pipeline(steps=[
-        ("feature_eng", feature_engineering),
-        ("processor", processor)
-    ])
+    pipeline = Pipeline(steps=[("feature_eng", feature_engineering), ("processor", processor)])
 
     return pipeline
